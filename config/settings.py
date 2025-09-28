@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 
+load_dotenv()
 # from django.conf.global_settings import STATICFILES_DIRS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -12,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-n1x_f=mr#85^7rzejs6w8kgz5@k9dmmv9i280=&kx3ig#o+k4h'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -65,7 +66,6 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-load_dotenv()
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
