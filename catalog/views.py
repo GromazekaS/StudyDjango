@@ -30,3 +30,7 @@ def product_details(request, pk):
     product = Product.objects.get(id=pk)
     context = {'product': product}
     return render(request, 'catalog/detailed_info.html', context)
+
+
+def menu(request):
+    return render(request, 'catalog/menu_example.html')
