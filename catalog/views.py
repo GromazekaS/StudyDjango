@@ -4,7 +4,7 @@ from .models import Product
 
 # Create your views here.
 def catalog_view(request):
-    return render(request, 'catalog/home.html')
+    return render(request, 'catalog/base.html')
 
 
 def contacts_view(request):
