@@ -24,3 +24,9 @@ def product_list_view(request):
     products = Product.objects.all()
     context = {'products': products}
     return render(request, 'catalog/product_list.html', context)
+
+
+def product_details(request, pk):
+    product = Product.objects.get(id=pk)
+    context = {'product': product}
+    return render(request, 'catalog/detailed_info.html', context)

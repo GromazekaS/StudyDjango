@@ -7,4 +7,5 @@ urlpatterns = [
     # path ('contacts/', views.contacts_view, name='contacts'),
     path ('contacts/', views.send_callback, name='contacts'),
     path ('product/list/', views.product_list_view, name='product_list'),
+    path ('product/info/<int:pk>', views.product_details, name='product_info'),
 ]
