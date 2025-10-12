@@ -3,31 +3,33 @@
 <div class="container">
     <h2>Список товаров:</h2>
     <div class="row text-center">
-        <div class="col-3">
-            <div class="card mb-4 box-shadow">
-                {% for product in products %}
+        <!-- Цикл должен оборачивать каждую колонку с карточкой -->
+        {% for product in products %}
+        <div class="col-lg-4 col-md-6 mb-4"> <!-- Колонка для каждого товара -->
+            <div class="card h-100 shadow-sm">
                 <div class="card-header">
                     <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
                 </div>
-                <div class="card-body">
-
-                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- {{ product.description }}
+                <div class="card-body d-flex flex-column">
+                    <ul class="list-unstyled mt-3 mb-4 text-start m-3 flex-grow-1">
+                        <li>{{ product.description }}</li>
+                        <li>
                             {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mt-2">
                             {% endif %}
                         </li>
-                        <li>- {{ product.category }}</li>
+                        <li>Категория: {{ product.category }}</li>
                     </ul>
-                    <h1 class="card-title pricing-card-title"> P {{ product.price_per_item }}</h1>
-                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'product_detail' product.pk %}">Подробнее</a>
-                    <a class="btn btn-lg btn-block btn-outline-secondary" href="{% url 'product_edit' product.pk %}">Редактировать</a>
-                    <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'product_delete' product.pk %}">Удалить</a>
+                    <h1 class="card-title pricing-card-title">{{ product.price_per_item }} ₽</h1>
+                    <div class="mt-auto">
+                        <a class="btn btn-lg btn-block btn-outline-primary mb-2" href="{% url 'product_detail' product.pk %}">Подробнее</a>
+                        <a class="btn btn-lg btn-block btn-outline-secondary mb-2" href="{% url 'product_edit' product.pk %}">Редактировать</a>
+                        <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'product_delete' product.pk %}">Удалить</a>
+                    </div>
                 </div>
-                {% endfor %}
             </div>
-
         </div>
+        {% endfor %}
     </div>
-</div>>
+</div>
 {% endblock %}

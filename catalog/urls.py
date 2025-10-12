@@ -10,7 +10,7 @@ urlpatterns = [
     path('products/<int:pk>/delete/', views.ProductDeleteView.as_view(), name='product_delete'),
     # path ('', views.catalog_view, name='home'),
     # path ('menu', views.menu, name='menu'),
-    # path ('contacts/', views.send_callback, name='contacts'),
+    path ('contacts/', views.ContactsView.as_view(), name='contacts'),
     # path ('product/list/', views.product_list_view, name='product_list'),
     # path ('product/info/<int:pk>', views.product_details, name='product_info'),
 ]

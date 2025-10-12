@@ -1,9 +1,11 @@
-# from django.http import HttpResponse
-# from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import render
 from .models import Product
-from django.views.generic import DetailView, DeleteView, ListView
+from django.views.generic import DetailView, DeleteView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
+from django import forms
+from django.core.mail import send_mail
 
 
 class ProductListView(ListView):
@@ -38,8 +40,42 @@ class ProductDeleteView(DeleteView):
     success_url = reverse_lazy('product_list')
 
 
+class ContactForm(forms.Form):
+    name = forms.CharField(label='Имя', max_length=100)
+    email = forms.EmailField(label='Email')
+    message = forms.CharField(label='Сообщение', widget=forms.Textarea)
 
 
+class ContactsView(FormView):
+    template_name = 'catalog/contacts.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('contacts')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update({
+            'phone': '+7 (915) 544-97-89',
+            'email': 'kinst@inbox.ru',
+            'address': 'г. Москва, ул. Примерная, д. 1',
+            'work_hours': 'Пн-Пт: 9:00-18:00'
+        })
+        return context
+
+    def form_valid(self, form):
+        # Обработка данных формы (отправка email и т.д.)
+        name = form.cleaned_data['name']
+        email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+
+        # Отправка email (пример)
+        send_mail(
+            f'Сообщение от {name}',
+            message,
+            email,
+            ['kinst@inbox.ru'],
+            fail_silently=False,
+        )
+        return super().form_valid(form)
 # Create your views here.
 # def catalog_view(request):
 #     return render(request, 'catalog/base.html')
