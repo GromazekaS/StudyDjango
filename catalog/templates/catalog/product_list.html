@@ -12,11 +12,17 @@
                 <div class="card-body">
 
                     <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- {{ product.description }} <img src="{{ product.image.url }}" alt="{{ product.name }}"></li>
+                        <li>- {{ product.description }}
+                            {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                            {% endif %}
+                        </li>
                         <li>- {{ product.category }}</li>
                     </ul>
                     <h1 class="card-title pricing-card-title"> P {{ product.price_per_item }}</h1>
-                    <a class="btn btn-lg btn-block btn-outline-primary" href="/product/info/{{ product.id }}">Подробнее</a>
+                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'product_detail' product.pk %}">Подробнее</a>
+                    <a class="btn btn-lg btn-block btn-outline-secondary" href="{% url 'product_edit' product.pk %}">Редактировать</a>
+                    <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'product_delete' product.pk %}">Удалить</a>
                 </div>
                 {% endfor %}
             </div>
