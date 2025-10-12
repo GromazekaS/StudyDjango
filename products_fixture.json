@@ -5,7 +5,7 @@
     "fields": {
         "name": "Автомобильное сидение",
         "description": "Детское кресло для автомобиля",
-        "image": "01.png",
+        "image": "products/icons/01.png",
         "category": 2,
         "price_per_item": "10000.00",
         "created_at": "2025-10-01T16:10:49.273Z",
@@ -18,7 +18,7 @@
     "fields": {
         "name": "Детская коляска",
         "description": "Детская коляска для прогулок",
-        "image": "02.png",
+        "image": "products/icons/02.png",
         "category": 2,
         "price_per_item": "20000.00",
         "created_at": "2025-10-01T16:11:49.999Z",
@@ -31,7 +31,7 @@
     "fields": {
         "name": "Бытовая химия",
         "description": "Моющие и чистящие средства",
-        "image": "03.png",
+        "image": "products/icons/03.png",
         "category": 1,
         "price_per_item": "500.00",
         "created_at": "2025-10-01T16:14:13.712Z",
@@ -44,7 +44,7 @@
     "fields": {
         "name": "Зубная паста",
         "description": "Средство для чистки зубов",
-        "image": "04.png",
+        "image": "products/icons/04.png",
         "category": 1,
         "price_per_item": "100.00",
         "created_at": "2025-10-01T16:15:58.702Z",
@@ -57,11 +57,24 @@
     "fields": {
         "name": "Керамическая посуда",
         "description": "Посуда из керамики",
-        "image": "05.png",
+        "image": "products/icons/05.png",
         "category": 1,
         "price_per_item": "250.00",
         "created_at": "2025-10-01T16:17:48.372Z",
         "updated_at": "2025-10-01T16:17:48.372Z"
+    }
+},
+{
+    "model": "catalog.product",
+    "pk": 6,
+    "fields": {
+        "name": "Полотенце",
+        "description": "Уютное махровое полотенце для ванной",
+        "image": "products/icons/06.png",
+        "category": 1,
+        "price_per_item": "750.00",
+        "created_at": "2025-10-04T08:43:33.630Z",
+        "updated_at": "2025-10-04T08:43:33.630Z"
     }
 }
 ]
