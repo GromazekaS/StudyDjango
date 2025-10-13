@@ -8,3 +8,11 @@ class Post(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     is_published = models.BooleanField(default=False)
     views_counter = models.PositiveIntegerField(default=0)
+
+    def __str__(self):
+        return f"Статья {self.title}"
+
+    class Meta:
+        verbose_name = 'статья'
+        verbose_name_plural = 'статьи'
+        ordering = ['title']
