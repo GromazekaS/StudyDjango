@@ -1,0 +1,12 @@
+{% extends "blog/blog_example_page.html" %}
+{% block content %}
+<div class="container">
+    <h2>Изменения в пост</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Изменить</button>
+        <a href="{% url 'post_detail' post.pk %}" class="btn btn-secondary">Отмена</a>
+    </form>
+</div>>
+{% endblock %}
