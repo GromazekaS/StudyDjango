@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="auto">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Blog StudyDjango</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+
+<body>
+
+{% include 'blog/nav_menu.html' %}
+
+<main class="container">
+    <!-- Большая карточка поста
+    <div class="p-4 p-md-5 mb-4 rounded text-body-emphasis bg-body-secondary">
+        <div class="col-lg-6 px-0"><h1 class="display-4 fst-italic">Title of a longer featured blog post</h1>
+            <p class="lead my-3">Multiple lines of text that form the lede, informing new readers quickly and
+                efficiently about what’s most interesting in this post’s contents.</p>
+            <p class="lead mb-0"><a href="#" class="text-body-emphasis fw-bold">Continue reading...</a></p></div>
+    </div> -->
+
+    {% block content %}
+    {% endblock %}
+
+</main>
+
+
+<footer class="py-5 text-center text-body-secondary bg-body-tertiary">
+    <p class="mb-0"><a href="#">Back to top</a></p>
+</footer>
+<script src="/static/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        class="astro-vvvwv3sm"></script>
+</body>
+</html>
