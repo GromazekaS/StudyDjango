@@ -1,6 +1,8 @@
 from django import forms
 from .models import Product, Category
 from django.core.exceptions import ValidationError
+from django.template.defaultfilters import filesizeformat
+import os
 
 SPAM_WORDS = ['казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция', 'радар']
 
@@ -70,6 +72,37 @@ class ProductForm(forms.ModelForm):
             if spam in description.lower():
                 raise ValidationError(f"Описание содержит запрещенное слово: '{spam}'")
         return description
+
+    def clean_image(self):
+        print('Чистое изображение')
+        image = self.cleaned_data.get('image', False)
+
+        # Если изображение не загружено - пропускаем валидацию
+        if not image:
+            return image
+
+        # Проверка размера файла (5 МБ = 5 * 1024 * 1024 байт)
+        max_size = 5 * 1024 * 1024
+        print(f'Размер файла: {image.size}')
+        if image.size > max_size:
+            raise ValidationError(
+                f'Размер файла не должен превышать 5 МБ. Ваш файл: {filesizeformat(image.size)}'
+            )
+
+        # Проверка расширения файла
+        valid_extensions = ['.jpg', '.jpeg', '.png']
+        ext = os.path.splitext(image.name)[1].lower()
+        if ext not in valid_extensions:
+            raise ValidationError(
+                f'Недопустимый формат файла. Разрешенные форматы: {", ".join(valid_extensions)}'
+            )
+
+        # Проверка MIME-типа (дополнительная проверка)
+        valid_mime_types = ['image/jpeg', 'image/png']
+        if hasattr(image, 'content_type') and image.content_type not in valid_mime_types:
+            raise ValidationError('Недопустимый тип файла. Разрешены только изображения.')
+
+        return image
 
     def clean_price_per_item(self):
         print('Чистая цена')
