@@ -24,7 +24,7 @@ class Product(models.Model):
         blank=True,
         null=True,
         verbose_name="Иконка",
-        help_text="Загрузите иконку продукта"
+        help_text="Загрузите изображение товара"
     )
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     price_per_item = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')

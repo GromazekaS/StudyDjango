@@ -4,7 +4,7 @@ from .models import Product
 from django.views.generic import DetailView, DeleteView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
-from django import forms
+from .forms import CategoryForm, ProductForm, ContactForm
 from django.core.mail import send_mail
 
 
@@ -22,14 +22,22 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ['name', 'image', 'description', 'price_per_item', 'category']
+    form_class = ProductForm
     template_name = 'catalog/create_form.html'
     success_url = reverse_lazy('product_list')
+
+    # def form_valid(self, form):
+    #     print("Форма валидна!")  # Проверяем, вызывается ли этот метод
+    #     return super().form_valid(form)
+    #
+    # def form_invalid(self, form):
+    #     print("Форма невалидна! Ошибки:", form.errors)  # Выводим ошибки в консоль
+    #     return super().form_invalid(form)
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ['name', 'image', 'description', 'price_per_item', 'category']
+    form_class = ProductForm
     template_name = 'catalog/create_form.html'
     success_url = reverse_lazy('product_list')
 
@@ -38,12 +46,6 @@ class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'catalog/delete_form.html'
     success_url = reverse_lazy('product_list')
-
-
-class ContactForm(forms.Form):
-    name = forms.CharField(label='Имя', max_length=100)
-    email = forms.EmailField(label='Email')
-    message = forms.CharField(label='Сообщение', widget=forms.Textarea)
 
 
 class ContactsView(FormView):

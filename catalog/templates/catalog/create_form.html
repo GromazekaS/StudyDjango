@@ -4,6 +4,12 @@
     <h2>Добавление нового продукта</h2>
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
+            {% if form.errors %}
+                <div class="alert alert-danger">
+                <strong>Ошибки в форме:</strong>
+                {{form.errors}}
+                </div>
+            {% endif %}
         {{ form.as_p }}
         <button type="submit" class="btn btn-primary">Добавить</button>
         <a href="{% url 'product_list' %}" class="btn btn-secondary">Отмена</a>
