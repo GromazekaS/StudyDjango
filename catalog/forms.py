@@ -23,17 +23,23 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
         fields = ['name', 'description', 'image', 'category', 'price_per_item']
-
+        labels = {
+            'name': 'Название товара',
+            'category': 'Категория товара',
+            'description': 'Описание товара',
+            'price_per_item': 'Цена товара',
+            'image': 'Изображение товара'
+        }
     def __init__(self, *args, **kwargs):
         super(ProductForm, self).__init__(*args, **kwargs)
 
-        # Настройка атрибутов виджета для поля 'first_name'
+        # Настройка атрибутов виджета для поля 'name'
         self.fields['name'].widget.attrs.update({
             'class': 'form-control',  # Добавление CSS-класса для стилизации поля
             'placeholder': 'Введите наименование товара'  # Текст подсказки внутри поля
         })
 
-        # Настройка атрибутов виджета для поля 'last_name'
+        # Настройка атрибутов виджета для поля 'description'
         self.fields['description'].widget.attrs.update({
             'class': 'form-control',  # Добавление CSS-класса для стилизации поля
             'placeholder': 'Введите описание товара'  # Текст подсказки внутри поля
@@ -45,13 +51,13 @@ class ProductForm(forms.ModelForm):
             'placeholder': 'Выберите изображение товара'  # Текст подсказки внутри поля
         })
 
-        # Настройка атрибутов виджета для поля 'enrollment_date'
+        self.fields['category'].empty_label = "Выберите категорию товара"
+        # Настройка атрибутов виджета для поля 'category'
         self.fields['category'].widget.attrs.update({
-            'class': 'form-control',  # Добавление CSS-класса для стилизации поля
-            'placeholder': 'Выберите категорию товара',  # Текст подсказки внутри поля
+            'class': 'form-select',  # Добавление CSS-класса для стилизации поля
         })
 
-        # Настройка атрибутов виджета для поля 'enrollment_date'
+        # Настройка атрибутов виджета для поля 'price_per_item'
         self.fields['price_per_item'].widget.attrs.update({
             'class': 'form-control',  # Добавление CSS-класса для стилизации поля
             'placeholder': 'Укажите цену товара',  # Текст подсказки внутри поля
@@ -61,7 +67,7 @@ class ProductForm(forms.ModelForm):
         self.fields['subscribe'].widget.attrs.update({
             'class': 'form-check-input',
             'role': 'switch',  # для переключателя
-            'id': 'Отслеживать товар'
+            'id': 'id_track'
         })'''
 
     def clean_name(self):
