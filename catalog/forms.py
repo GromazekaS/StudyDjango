@@ -57,6 +57,13 @@ class ProductForm(forms.ModelForm):
             'placeholder': 'Укажите цену товара',  # Текст подсказки внутри поля
         })
 
+        ''' Вот так был бы описан виджет checkbox'а в форме:
+        self.fields['subscribe'].widget.attrs.update({
+            'class': 'form-check-input',
+            'role': 'switch',  # для переключателя
+            'id': 'Отслеживать товар'
+        })'''
+
     def clean_name(self):
         print('Чистое название')
         name = self.cleaned_data['name']
