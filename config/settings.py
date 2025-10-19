@@ -1,5 +1,6 @@
 import os
 
+# from django.conf.global_settings import AUTH_USER_MODEL
 # from django.conf.global_settings import MEDIA_ROOT
 # from django.conf.global_settings import MEDIA_URL
 from dotenv import load_dotenv
@@ -33,8 +34,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'catalog',
     'blog',
+    'users'
 ]
 
 MIDDLEWARE = [
@@ -131,6 +134,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
 '''
 # Настройки для использования SMTP-сервера
