@@ -10,7 +10,7 @@ from django.core.mail import send_mail
 
 class ProductListView(ListView):
     model = Product
-    template_name = 'catalog/product_list.html'
+    template_name = 'catalog/products_list.html'
     context_object_name = 'products'
 
 
@@ -24,7 +24,7 @@ class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
-    success_url = reverse_lazy('product_list')
+    success_url = reverse_lazy('products_list')
 
     # def form_valid(self, form):
     #     print("Форма валидна!")  # Проверяем, вызывается ли этот метод
@@ -39,13 +39,13 @@ class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
-    success_url = reverse_lazy('product_list')
+    success_url = reverse_lazy('products_list')
 
 
 class ProductDeleteView(DeleteView):
     model = Product
     template_name = 'catalog/delete_form.html'
-    success_url = reverse_lazy('product_list')
+    success_url = reverse_lazy('products_list')
 
 
 class ContactsView(FormView):
@@ -96,10 +96,10 @@ class ContactsView(FormView):
 #     return render(request, 'catalog/contacts.html')
 #
 #
-# def product_list_view(request):
+# def products_list_view(request):
 #     products = Product.objects.all()
 #     context = {'products': products}
-#     return render(request, 'catalog/product_list.html', context)
+#     return render(request, 'catalog/products_list.html', context)
 #
 #
 # def product_details(request, pk):

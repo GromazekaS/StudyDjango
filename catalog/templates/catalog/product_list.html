@@ -22,9 +22,9 @@
                     </ul>
                     <h1 class="card-title pricing-card-title">{{ product.price_per_item }} ₽</h1>
                     <div class="mt-auto">
-                        <a class="btn btn-lg btn-block btn-outline-primary mb-2" href="{% url 'product_detail' product.pk %}">Подробнее</a>
-                        <a class="btn btn-lg btn-block btn-outline-secondary mb-2" href="{% url 'product_edit' product.pk %}">Редактировать</a>
-                        <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'product_delete' product.pk %}">Удалить</a>
+                        <a class="btn btn-lg btn-block btn-outline-primary mb-2" href="{% url 'catalog:product_detail' product.pk %}">Подробнее</a>
+                        <a class="btn btn-lg btn-block btn-outline-secondary mb-2" href="{% url 'catalog:product_edit' product.pk %}">Редактировать</a>
+                        <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
                     </div>
                 </div>
             </div>
