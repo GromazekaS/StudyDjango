@@ -137,13 +137,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-'''
+
 # Настройки для использования SMTP-сервера
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.ru'  # Адрес SMTP-сервера (например, для Gmail: smtp.gmail.com)
-EMAIL_PORT = 587  # Порт для TLS (чаще всего 587 или 465 для SSL)
-EMAIL_USE_TLS = True  # Использовать TLS-шифрование. Для порта 465 установите EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'your_email@yandex.ru'  # Ваша полная почта
-EMAIL_HOST_PASSWORD = 'your_app_password'  # Пароль приложения или ваш пароль
-DEFAULT_FROM_EMAIL = 'your_email@yandex.ru'  # Email отправителя по умолчанию
-'''
+EMAIL_HOST = 'smtp.mail.ru'
+EMAIL_PORT = 2525
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
