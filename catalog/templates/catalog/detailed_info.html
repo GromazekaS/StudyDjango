@@ -19,8 +19,10 @@
                         <li>- {{ product.category }}</li>
                     </ul>
                     <h1 class="card-title pricing-card-title"> P {{ product.price_per_item }}</h1>
+                    {% if user.is_authenticated %}
                     <a class="btn btn-lg btn-block btn-outline-secondary" href="{% url 'catalog:product_edit' product.pk %}">Редактировать</a>
                     <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+                    {% endif %}
                     <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:products_list' %}">Назад</a>
                 </div>
             </div>

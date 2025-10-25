@@ -6,6 +6,8 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from .forms import CategoryForm, ProductForm, ContactForm
 from django.core.mail import send_mail
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 
 class ProductListView(ListView):
@@ -20,7 +22,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
@@ -35,14 +37,14 @@ class ProductCreateView(CreateView):
     #     return super().form_invalid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
     success_url = reverse_lazy('products_list')
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/delete_form.html'
     success_url = reverse_lazy('products_list')
