@@ -29,6 +29,7 @@ class ProductForm(forms.ModelForm):
             'description': 'Описание товара',
             'price_per_item': 'Цена товара',
             'image': 'Изображение товара',
+            'published': 'Опубликовано'
         }
 
     def __init__(self, *args, **kwargs):

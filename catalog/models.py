@@ -1,5 +1,6 @@
 from django.db import models
 # from django.db.models.fields import DecimalField
+from users.models import CustomUser
 
 
 # Create your models here.
@@ -31,6 +32,13 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     published = models.BooleanField(default=False)
+
+    # Добавляем поле владельца
+    owner = models.ForeignKey(CustomUser, null=True, blank=True,
+        on_delete=models.CASCADE,
+        verbose_name='Владелец',
+        related_name='products',
+    )
 
     def __str__(self):
         return f'Товар {self.name} из категории {self.category}, цена за штуку: {self.price_per_item}'

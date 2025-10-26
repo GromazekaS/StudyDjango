@@ -7,6 +7,7 @@ from django.urls import reverse_lazy
 from .forms import CategoryForm, ProductForm, ContactForm
 from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from .mixins import OwnerRequiredMixin, OwnerOrModeratorRequiredMixin
 from django.contrib import messages
 
 
@@ -28,21 +29,16 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     template_name = 'catalog/create_form.html'
     success_url = reverse_lazy('products_list')
 
-    # def form_valid(self, form):
-    #     print("Форма валидна!")  # Проверяем, вызывается ли этот метод
-    #     return super().form_valid(form)
-    #
-    # def form_invalid(self, form):
-    #     print("Форма невалидна! Ошибки:", form.errors)  # Выводим ошибки в консоль
-    #     return super().form_invalid(form)
+    def form_valid(self, form):
+        # Автоматически назначаем текущего пользователя владельцем
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
 
-
-class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
     success_url = reverse_lazy('catalog:products_list')
-    permission_required = 'catalog.change_product'  # стандартное разрешение на изменение
 
     def get_form_class(self):
         # Возвращаем форму с передачей пользователя
@@ -54,23 +50,13 @@ class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView)
         return kwargs
 
     def form_valid(self, form):
-        # Проверяем, пытается ли пользователь изменить поле published
-        if 'published' in form.changed_data:
-            # Определяем какое действие пытается выполнить пользователь
-            new_published_value = form.cleaned_data.get('published')
-
-            if new_published_value:  # пытается опубликовать
-                if not self.request.user.has_perm('catalog.can_publish_product'):
-                    messages.error(self.request, 'У вас нет прав для публикации товаров')
-                    return self.form_invalid(form)
-            else:  # пытается снять с публикации
-                if not self.request.user.has_perm('catalog.can_unpublish_product'):
-                    messages.error(self.request, 'У вас нет прав для снятия товаров с публикации')
-                    return self.form_invalid(form)
-
+        if 'published' in form.cleaned_data:
+            if not self.request.user.has_perm('catalog.can_publish_product'):
+                form.add_error('published', 'У вас нет прав для публикации товаров')
+                return self.form_invalid(form)
         return super().form_valid(form)
 
-class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, OwnerOrModeratorRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/delete_form.html'
     success_url = reverse_lazy('catalog:products_list')
