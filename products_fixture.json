@@ -9,7 +9,8 @@
         "category": 2,
         "price_per_item": "10000.00",
         "created_at": "2025-10-01T16:10:49.273Z",
-        "updated_at": "2025-10-01T16:10:49.273Z"
+        "updated_at": "2025-10-01T16:10:49.273Z",
+        "published": true
     }
 },
 {
@@ -22,7 +23,8 @@
         "category": 2,
         "price_per_item": "20000.00",
         "created_at": "2025-10-01T16:11:49.999Z",
-        "updated_at": "2025-10-01T16:11:49.999Z"
+        "updated_at": "2025-10-01T16:11:49.999Z",
+        "published": true
     }
 },
 {
@@ -35,7 +37,8 @@
         "category": 1,
         "price_per_item": "500.00",
         "created_at": "2025-10-01T16:14:13.712Z",
-        "updated_at": "2025-10-01T16:14:13.712Z"
+        "updated_at": "2025-10-01T16:14:13.712Z",
+        "published": true
     }
 },
 {
@@ -48,7 +51,8 @@
         "category": 1,
         "price_per_item": "100.00",
         "created_at": "2025-10-01T16:15:58.702Z",
-        "updated_at": "2025-10-01T16:15:58.702Z"
+        "updated_at": "2025-10-01T16:15:58.702Z",
+        "published": true
     }
 },
 {
@@ -61,7 +65,8 @@
         "category": 1,
         "price_per_item": "250.00",
         "created_at": "2025-10-01T16:17:48.372Z",
-        "updated_at": "2025-10-01T16:17:48.372Z"
+        "updated_at": "2025-10-01T16:17:48.372Z",
+        "published": true
     }
 },
 {
@@ -74,7 +79,8 @@
         "category": 1,
         "price_per_item": "750.00",
         "created_at": "2025-10-04T08:43:33.630Z",
-        "updated_at": "2025-10-04T08:43:33.630Z"
+        "updated_at": "2025-10-04T08:43:33.630Z",
+        "published": true
     }
 }
 ]

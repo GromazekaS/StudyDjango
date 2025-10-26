@@ -30,6 +30,7 @@ class Product(models.Model):
     price_per_item = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='Цена')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    published = models.BooleanField(default=False)
 
     def __str__(self):
         return f'Товар {self.name} из категории {self.category}, цена за штуку: {self.price_per_item}'
@@ -39,3 +40,8 @@ class Product(models.Model):
         verbose_name_plural = 'товары'
         ordering = ['name']
 
+        permissions = [
+            ('can_unpublish_product', 'Может снимать с публикации товар'),
+            ('can_delete_product', 'Может удалять товар'),
+            # Добавим еще одно для публикации
+            ('can_publish_product', 'Может публиковать товар'),        ]

@@ -1,13 +1,13 @@
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
 from .models import Product
-from django.views.generic import DetailView, DeleteView, ListView, FormView
+from django.views.generic import View, DetailView, DeleteView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 from .forms import CategoryForm, ProductForm, ContactForm
 from django.core.mail import send_mail
-from django.contrib.auth.mixins import LoginRequiredMixin
-
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib import messages
 
 
 class ProductListView(ListView):
@@ -37,17 +37,44 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
     #     return super().form_invalid(form)
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
     template_name = 'catalog/create_form.html'
-    success_url = reverse_lazy('products_list')
+    success_url = reverse_lazy('catalog:products_list')
+    permission_required = 'catalog.change_product'  # стандартное разрешение на изменение
 
+    def get_form_class(self):
+        # Возвращаем форму с передачей пользователя
+        return ProductForm
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user  # Передаем пользователя в форму
+        return kwargs
+
+    def form_valid(self, form):
+        # Проверяем, пытается ли пользователь изменить поле published
+        if 'published' in form.changed_data:
+            # Определяем какое действие пытается выполнить пользователь
+            new_published_value = form.cleaned_data.get('published')
+
+            if new_published_value:  # пытается опубликовать
+                if not self.request.user.has_perm('catalog.can_publish_product'):
+                    messages.error(self.request, 'У вас нет прав для публикации товаров')
+                    return self.form_invalid(form)
+            else:  # пытается снять с публикации
+                if not self.request.user.has_perm('catalog.can_unpublish_product'):
+                    messages.error(self.request, 'У вас нет прав для снятия товаров с публикации')
+                    return self.form_invalid(form)
+
+        return super().form_valid(form)
+
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     template_name = 'catalog/delete_form.html'
-    success_url = reverse_lazy('products_list')
+    success_url = reverse_lazy('catalog:products_list')
+    permission_required = 'can_delete_product'
 
 
 class ContactsView(FormView):
@@ -80,7 +107,33 @@ class ContactsView(FormView):
             fail_silently=False,
         )
         return super().form_valid(form)
-# Create your views here.
+
+
+class PublishProductView(LoginRequiredMixin, View):
+    def get(self, request, pk):
+        return HttpResponse(f"GET запрос работает! PK: {pk}")
+
+    def post(self, request, pk):
+        product = get_object_or_404(Product, id=pk)
+        print(f"User: {request.user}")
+        print(f"User permissions: {request.user.get_all_permissions()}")
+        if not request.user.has_perm('catalog.can_unpublish_product'):
+            print("User doesn't have the permission")
+            return HttpResponseForbidden("У вас нет прав для снятия товара.")
+        else:
+            print("User has the permission")
+
+        if not request.user.has_perm('catalog.can_unpublish_product'):
+            return HttpResponseForbidden("У вас нет прав для снятия товара.")
+
+        # Логика рецензирования книги
+        product.published = request.POST.get('published')
+        product.save()
+
+        return redirect('catalog:product_detail', pk=pk)
+
+
+# FBV views here.
 # def catalog_view(request):
 #     return render(request, 'catalog/base.html')
 #
