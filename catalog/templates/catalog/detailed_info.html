@@ -1,33 +1,22 @@
 {% extends "catalog/base.html" %}
 {% block content %}
 <div class="container">
-    <h2>Информация о {{ product.name }}</h2>
-    <div class="row text-center">
-        <div class="col-3">
-            <div class="card mb-4 box-shadow">
-                <div class="card-header">
-                    <h4 class="my-0 font-weight-normal">{{ product.name }}</h4>
-                </div>
-                <div class="card-body">
+ <div class="product-item">
+    <h3>{{ product.name }}</h3>
+    <p>{{ product.description }}</p>
+    <p>Цена: {{ product.price_per_item }}</p>
+    <p>Владелец: {{ product.owner.username }}</p>
 
-                    <ul class="list-unstyled mt-3 mb-4 text-start m-3">
-                        <li>- {{ product.description }}
-                            {% if product.image %}
-                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-                            {% endif %}
-                        </li>
-                        <li>- {{ product.category }}</li>
-                    </ul>
-                    <h1 class="card-title pricing-card-title"> P {{ product.price_per_item }}</h1>
-                    {% if user.is_authenticated %}
-                    <a class="btn btn-lg btn-block btn-outline-secondary" href="{% url 'catalog:product_edit' product.pk %}">Редактировать</a>
-                    <a class="btn btn-lg btn-block btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
-                    {% endif %}
-                    <a class="btn btn-lg btn-block btn-outline-primary" href="{% url 'catalog:products_list' %}">Назад</a>
-                </div>
-            </div>
+    <!-- Кнопки редактирования и удаления показываем только владельцу -->
+    {% if user.is_authenticated and product.owner == user %}
+        <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-secondary">Редактировать</a>
+        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
 
-        </div>
-    </div>
+    <!-- Или для модераторов (только удаление) -->
+    {% if user.is_authenticated and user.has_perm 'catalog.can_delete_product' and product.owner != user %}
+        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить (модератор)</a>
+    {% endif %}
+</div>
 </div>>
 {% endblock %}

@@ -22,15 +22,18 @@ class CategoryForm(forms.ModelForm):
 class ProductForm(forms.ModelForm):
     class Meta:
         model = Product
-        fields = ['name', 'description', 'image', 'category', 'price_per_item']
+        fields = ['name', 'description', 'image', 'category', 'price_per_item', 'published']
         labels = {
             'name': 'Название товара',
             'category': 'Категория товара',
             'description': 'Описание товара',
             'price_per_item': 'Цена товара',
-            'image': 'Изображение товара'
+            'image': 'Изображение товара',
+            'published': 'Опубликовано'
         }
+
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop('user', None)
         super(ProductForm, self).__init__(*args, **kwargs)
 
         # Настройка атрибутов виджета для поля 'name'
@@ -63,15 +66,20 @@ class ProductForm(forms.ModelForm):
             'placeholder': 'Укажите цену товара',  # Текст подсказки внутри поля
         })
 
-        ''' Вот так был бы описан виджет checkbox'а в форме:
-        self.fields['subscribe'].widget.attrs.update({
+        # Если пользователь не имеет прав на публикацию - делаем поле read-only
+        if self.user and not self.user.has_perm('catalog.can_publish_product'):
+            self.fields['published'].disabled = True
+            self.fields['published'].help_text = 'У вас нет прав для изменения статуса публикации'
+
+        # Вот так был бы описан виджет checkbox'а в форме:
+        self.fields['published'].widget.attrs.update({
             'class': 'form-check-input',
             'role': 'switch',  # для переключателя
             'id': 'id_track'
-        })'''
+        })
 
     def clean_name(self):
-        print('Чистое название')
+        # print('Чистое название')
         name = self.cleaned_data['name']
         for spam in SPAM_WORDS:
             if spam in name.lower():
@@ -79,7 +87,7 @@ class ProductForm(forms.ModelForm):
         return name
 
     def clean_description(self):
-        print('Чистое описание')
+        # print('Чистое описание')
         description = self.cleaned_data['description']
         for spam in SPAM_WORDS:
             if spam in description.lower():
@@ -87,7 +95,7 @@ class ProductForm(forms.ModelForm):
         return description
 
     def clean_image(self):
-        print('Чистое изображение')
+        # print('Чистое изображение')
         image = self.cleaned_data.get('image', False)
 
         # Если изображение не загружено - пропускаем валидацию
@@ -96,7 +104,7 @@ class ProductForm(forms.ModelForm):
 
         # Проверка размера файла (5 МБ = 5 * 1024 * 1024 байт)
         max_size = 5 * 1024 * 1024
-        print(f'Размер файла: {image.size}')
+        # print(f'Размер файла: {image.size}')
         if image.size > max_size:
             raise ValidationError(
                 f'Размер файла не должен превышать 5 МБ. Ваш файл: {filesizeformat(image.size)}'
@@ -118,7 +126,7 @@ class ProductForm(forms.ModelForm):
         return image
 
     def clean_price_per_item(self):
-        print('Чистая цена')
+        # print('Чистая цена')
         price = self.cleaned_data['price_per_item']
         if price < 0:
             raise ValidationError(f"Цена не может быть отрицательной '{price}'")
