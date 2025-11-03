@@ -9,6 +9,9 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .mixins import OwnerRequiredMixin, OwnerOrModeratorRequiredMixin
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 
 
 class ProductListView(ListView):
@@ -17,6 +20,7 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/detailed_info.html'
