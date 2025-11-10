@@ -20,6 +20,7 @@ class ProductListView(ListView):
     template_name = 'catalog/products_list.html'
     context_object_name = 'products'
 
+# Низкоуровневое кэширование для списка продуктов
     def get_queryset(self):
         queryset = cache.get('products_queryset')
         if not queryset:
