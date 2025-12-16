@@ -10,7 +10,12 @@
     <p>{{ product.description }}</p>
     <p>Цена: {{ product.price_per_item }}</p>
     <p>Владелец: {{ product.owner.username }}</p>
-
+    <p>
+        Категория:
+        <a href="{% url 'catalog:products_by_category' product.category.id %}">
+            {{ product.category.name }}
+        </a>
+    </p>
     <!-- Кнопки редактирования и удаления показываем только владельцу -->
     {% if user.is_authenticated and product.owner == user %}
         <a href="{% url 'catalog:product_edit' product.pk %}" class="btn btn-secondary">Редактировать</a>

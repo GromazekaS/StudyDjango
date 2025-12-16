@@ -6,6 +6,24 @@
         {% if user.is_authenticated %}
         <a class="p-2 btn btn-outline-primary" href="/catalog/products/new">Добавить</a>
         {% endif %}
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Категории товаров</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for category in categories %}
+                    <a href="{% url 'catalog:products_by_category' category.id %}"
+                       class="list-group-item list-group-item-action">
+                        {{ category.name }}
+                        <span class="badge bg-primary rounded-pill float-end">
+                            {{ category.product_set.count }}
+                        </span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
         <a class="p-2 btn btn-outline-primary" href="/catalog/contacts/">Контакты</a>
             <ul class="navbar-nav ml-auto">
                 {% if user.is_authenticated %}

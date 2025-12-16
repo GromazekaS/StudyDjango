@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
-from .models import Product
+from .models import Product, Category
 from django.views.generic import View, DetailView, DeleteView, ListView, FormView
 from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
@@ -9,6 +9,10 @@ from django.core.mail import send_mail
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from .mixins import OwnerRequiredMixin, OwnerOrModeratorRequiredMixin
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.core.cache import cache
+
 
 
 class ProductListView(ListView):
@@ -16,7 +20,15 @@ class ProductListView(ListView):
     template_name = 'catalog/products_list.html'
     context_object_name = 'products'
 
+# Низкоуровневое кэширование для списка продуктов
+    def get_queryset(self):
+        queryset = cache.get('products_queryset')
+        if not queryset:
+            queryset = super().get_queryset()
+            cache.set('products_queryset', queryset, 60 * 15)  # Кешируем данные на 15 минут
+        return queryset
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductDetailView(DetailView):
     model = Product
     template_name = 'catalog/detailed_info.html'
@@ -34,6 +46,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
+@method_decorator(cache_page(60 * 15), name='dispatch')
 class ProductUpdateView(LoginRequiredMixin, OwnerRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
@@ -119,6 +132,24 @@ class PublishProductView(LoginRequiredMixin, View):
         return redirect('catalog:product_detail', pk=pk)
 
 
+class ProductsByCategoryView(ListView):
+    model = Product
+    template_name = 'catalog/products_by_category.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, id=self.kwargs['category_id'])
+        return Product.objects.filter(
+            category=self.category,
+            published=True
+        ).select_related('category', 'owner')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = self.category
+        context['title'] = f'Товары в категории: {self.category.name}'
+        return context
+
 # FBV views here.
 # def catalog_view(request):
 #     return render(request, 'catalog/base.html')
@@ -151,3 +182,20 @@ class PublishProductView(LoginRequiredMixin, View):
 #
 # def menu(request):
 #     return render(request, 'catalog/menu_example.html')
+
+def your_cached_view(request):
+    import time
+    print("=== VIEW CALLED ===")  # Должно появиться в консоли runserver
+
+    cache_key = 'view_cache_test'
+    data = cache.get(cache_key)
+
+    if data is None:
+        print("Cache MISS - generating data")
+        data = f"Generated at {time.time()}"
+        cache.set(cache_key, data, 900)  # 15 минут
+    else:
+        print("Cache HIT - using cached data")
+
+    print(f"Data: {data}")
+    return HttpResponse(data)
